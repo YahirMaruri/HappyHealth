@@ -21,7 +21,7 @@ export default function Page() {
         <h1 className="splash-logo">Happy<span>Health</span><span className="logo-dot">.</span></h1>
         <p className="splash-tagline">Seis disciplinas. Un mismo corazón.</p>
         <div className="splash-disciplines" aria-label="Disciplinas del equipo"><span>Enfermería</span><span>Medicina</span><span>Farmacia</span><span>Nutrición</span><span>Fisioterapia</span><span>Psicología</span></div>
-        <Link className="primary-button splash-start" href="/especialidades">Inicio <ArrowRight size={19} /></Link>
+        <Link className="primary-button splash-start" href="/especialidades">Iniciar <ArrowRight size={19} /></Link>
         <p className="splash-footnote">Un nuevo camino para cuidar de ti.</p>
       </div>
       <span className="splash-bottom"><HeartPulse size={16} /> Atención integral, humana y cercana</span>
