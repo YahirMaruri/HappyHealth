@@ -1,3 +1,8 @@
+"use client"
+
+import { useState } from "react"
+import type { TopicEducation } from "@/lib/content/additional-topics"
+
 const layouts: Record<string, { kind: string; labels: [string, string, string] }> = {
   cardiologia: {kind:"heart", labels:["Corazón", "Circulación", "Control y seguimiento"]},
   endocrinologia: {kind:"metabolism", labels:["Hormonas", "Metabolismo", "Análisis de control"]},
@@ -34,9 +39,11 @@ const layouts: Record<string, { kind: string; labels: [string, string, string] }
   neurofisiologia: {kind:"signals", labels:["Registro de señales", "Técnica del estudio", "Interpretación clínica"]},
 }
 
-export function TopicDiagram({ specialty, focus }: {specialty: string; focus: string}) {
+export function TopicDiagram({ specialty, focus, education }: { specialty: string; focus: string; education?: TopicEducation }) {
+  const [active, setActive] = useState(0)
   const id = `topic-diagram-${specialty}`
   const layout = layouts[specialty] ?? layouts.cardiologia
+  const insights = education ? [education.signs, education.evaluation, education.followup] : ["Observa y anota qué cambios afectan tus actividades.", "El equipo selecciona la evaluación según tus síntomas y antecedentes.", "Acuerda un seguimiento y a quién contactar si algo cambia."]
   const art: Record<string, React.ReactNode> = {
     heart: <><path d="M150 192C130 174 68 135 77 94c8-35 51-39 73-10 22-29 65-25 73 10 9 41-53 80-73 98Z" fill="#f58f7c" stroke="#c9685a" strokeWidth="3"/><path d="M65 133h42l14-24 20 54 19-34h74" stroke="#fff9e9" strokeWidth="7" fill="none" strokeLinejoin="round"/></>,
     lungs: <><path d="M143 60v66l-28 23M157 60v66l28 23" stroke="#6f9b9a" strokeWidth="12" fill="none"/><path d="M137 102c-8-29-38-17-51 15-16 39-19 70 0 76 22 8 49-7 51-29Z" fill="#8ad1c5" stroke="#348d85" strokeWidth="3"/><path d="M163 102c8-29 38-17 51 15 16 39 19 70 0 76-22 8-49-7-51-29Z" fill="#c1abe0" stroke="#9478b4" strokeWidth="3"/><path d="m129 130-20 21-9-4m12 4-6 23m65-44 20 21 9-4m-12 4 6 23" stroke="#fffaf1" strokeWidth="4" fill="none"/></>,
@@ -58,5 +65,5 @@ export function TopicDiagram({ specialty, focus }: {specialty: string; focus: st
     signals: <><rect x="67" y="73" width="168" height="111" rx="14" fill="#e0f0e9" stroke="#88afa3" strokeWidth="3"/><path d="M79 135h26l12-30 19 58 22-53 14 25h49" stroke="#a08abb" strokeWidth="6" fill="none" strokeLinejoin="round"/><path d="M151 184v22m-40 0h80" stroke="#88afa3" strokeWidth="7" strokeLinecap="round"/></>,
     metabolism: <><path d="M145 91c-26-35-48-3-38 28-10 33 14 52 38 21h10c24 31 48 12 38-21 10-31-12-63-38-28Z" fill="#c3acdf" stroke="#967aaf" strokeWidth="3"/><path d="M150 58v87" stroke="#f0c379" strokeWidth="8"/><path d="m91 181 17-10 17 10v20l-17 10-17-10Zm84 0 17-10 17 10v20l-17 10-17-10Z" fill="#a6d8c6" stroke="#71ae9c" strokeWidth="3"/></>,
   }
-  return <figure className="topic-diagram" aria-labelledby={id}><div className="topic-diagram-art"><svg viewBox="0 0 300 270" role="img" aria-label={`Esquema conceptual de ${focus.toLowerCase()}`}><circle cx="150" cy="135" r="116" fill="#fff9ef"/><circle cx="73" cy="67" r="14" fill="#f5d788"/><circle cx="238" cy="203" r="19" fill="#d6c5e9"/>{art[layout.kind]}</svg></div><figcaption id={id}><span>ESQUEMA PARA COMPRENDER</span><strong>{focus}</strong><ol>{layout.labels.map((label,i)=><li key={label}><b>{i+1}</b>{label}</li>)}</ol><small>Representación conceptual del área y del cuidado. No muestra una lesión individual ni indica una técnica para realizar en casa.</small></figcaption></figure>
+  return <figure className="topic-diagram" aria-labelledby={id}><div className="topic-diagram-art"><svg viewBox="0 0 300 270" role="img" aria-label={`Ilustración conceptual interactiva de ${focus.toLowerCase()}, área de ${specialty}`}><circle cx="150" cy="135" r="116" fill="#fff9ef"/><circle cx="73" cy="67" r="14" fill="#f5d788"/><circle cx="238" cy="203" r="19" fill="#d6c5e9"/>{art[layout.kind]}</svg><div className="diagram-hotspots" role="group" aria-label={`Puntos interactivos de la guía: ${focus}`}>{layout.labels.map((label, index) => <button key={label} type="button" aria-label={`${index + 1}. ${label}`} aria-pressed={active === index} className={active === index ? "active" : ""} onClick={() => setActive(index)}>{index + 1}</button>)}</div></div><figcaption id={id}><span>ILUSTRACIÓN INTERACTIVA · {specialty.replaceAll("-", " ").toLocaleUpperCase("es")}</span><strong>{focus}</strong><ol>{layout.labels.map((label,i)=><li key={label}><button type="button" aria-pressed={active === i} onClick={() => setActive(i)}><b>{i+1}</b>{label}</button></li>)}</ol><p className="diagram-insight" aria-live="polite">{insights[active]}</p><small>Esquema educativo del área, acompañado de información propia de esta guía. Los puntos organizan la explicación; no señalan lesiones ni sustituyen una evaluación clínica. No muestra una técnica para realizar en casa.</small></figcaption></figure>
 }

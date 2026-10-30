@@ -25,6 +25,7 @@ export default function Page() {
         <p className="splash-footnote">Un nuevo camino para cuidar de ti.</p>
       </div>
       <span className="splash-bottom"><HeartPulse size={16} /> Atención integral, humana y cercana</span>
+      <footer className="splash-credit">Created by Dr. Odai Yahir Maruri García</footer>
     </main>
   )
 }
